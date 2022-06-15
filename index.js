@@ -33,9 +33,16 @@ app.get('/api/persons', (request, response) => {
 })
 
 // 3.2
-app.get('/', (request, response) => {
-    response.send('<h1>Hello World!</h1>')
-  })
+app.get('/info', (request, response) => {
+    const size = notes.length
+    const timeDate = new Date()
+    response.send(
+        `<p>Phonebook has info for ${size} people</p>
+        <p>${timeDate}</p>
+        `
+        
+    )
+})
 
 const PORT = 3001
 app.listen(PORT, () => {
