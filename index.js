@@ -37,6 +37,7 @@ const generateId = () => {
 }
 
 
+
 app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>')
 })
@@ -77,6 +78,7 @@ app.get('/info', (request, response) => {
 app.post('/api/persons', (request, response) => {
     const body = request.body
 
+    // 3.6
     if (!body.name) {
     return response.status(400).json({ 
         error: 'name missing' 
@@ -101,9 +103,7 @@ app.post('/api/persons', (request, response) => {
         name: body.name,
         number: body.number,      
     }
-
     persons = persons.concat(person)
-
     response.json(person)
 })
 

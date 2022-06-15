@@ -8,3 +8,28 @@ Content-type: application/json
     "name": "Mike",
     "number": "1234567"
 }
+
+### name missing
+POST http://localhost:3001/api/persons HTTP/1.1
+Content-type: application/json
+
+{
+    "number": "1234567"
+}
+
+### number missing
+POST http://localhost:3001/api/persons HTTP/1.1
+Content-type: application/json
+
+{
+    "name": "Mike"
+}
+
+### name exists
+POST http://localhost:3001/api/persons HTTP/1.1
+Content-type: application/json
+
+{
+    "name": "Arto Hellas",
+    "number": "1111111"
+}
