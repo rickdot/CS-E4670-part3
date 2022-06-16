@@ -2,10 +2,13 @@ const express = require('express')
 const app = express()
 var morgan = require('morgan')
 const cors = require('cors')
+require('dotenv').config()
+// const mongoose = require('mongoose')
+const Person = require('./models/person')
 
 morgan.token('body', request => {
-    return JSON.stringify(request.body)
-  })
+  return JSON.stringify(request.body)
+})
 
 app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
@@ -51,8 +54,11 @@ app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>')
 })
 
+// 3.13
 app.get('/api/persons', (request, response) => {
-  response.json(persons)
+  Person.find({}).then(persons => {
+    response.json(persons)
+  })
 })
 
 // 3.3
@@ -84,40 +90,60 @@ app.get('/info', (request, response) => {
 
 
 // 3.5
-app.post('/api/persons', (request, response) => {
-    const body = request.body
-    // console.log(body);
+// app.post('/api/persons', (request, response) => {
+//     const body = request.body
+//     // console.log(body);
 
-    // 3.6
-    if (!body.name) {
-    return response.status(400).json({ 
-        error: 'name missing' 
-    })
-    }
+//     // 3.6
+//     if (!body.name) {
+//     return response.status(400).json({ 
+//         error: 'name missing' 
+//     })
+//     }
 
-    if (!body.number) {
-    return response.status(400).json({ 
-        error: 'number missing' 
-    })
-    }
+//     if (!body.number) {
+//     return response.status(400).json({ 
+//         error: 'number missing' 
+//     })
+//     }
 
-    namearr = persons.map(n => n.name)
-    if (namearr.includes(body.name)){
-    return response.status(400).json({
-        error: 'name must be unique'
-    })
-    }
+//     namearr = persons.map(n => n.name)
+//     if (namearr.includes(body.name)){
+//     return response.status(400).json({
+//         error: 'name must be unique'
+//     })
+//     }
     
-    const person = {
-        id: generateId(),
-        name: body.name,
-        number: body.number,      
-    }
-    persons = persons.concat(person)
-    response.json(person)
+//     const person = {
+//         id: generateId(),
+//         name: body.name,
+//         number: body.number,      
+//     }
+//     persons = persons.concat(person)
+//     response.json(person)
+// })
+
+
+// 3.14
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+
+  if (body.name === undefined) {
+    return response.status(400).json({ error: 'name missing' })
+  }
+
+  const person = new Person({
+    name: body.name,
+    number: body.number
+  })
+
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
 })
 
-const PORT = process.env.PORT || 3001
+
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
