@@ -20,35 +20,33 @@ const personSchema = new mongoose.Schema({
 const Person = mongoose.model('Person', personSchema)
 
 // add
-if(newName !== undefined){
-    mongoose
+if(newName !== undefined) {
+  mongoose
     .connect(url)
-    .then((result) => {
-
-        const person = new Person({
-            name: newName,
-            number: newNumber
-        })
-
-        return person.save()
+    .then(() => {
+      const person = new Person({
+        name: newName,
+        number: newNumber
+      })
+      return person.save()
     })
     .then(() => {
-        console.log(`added ${newName} number ${newNumber} to phonebook`)
-        return mongoose.connection.close()
+      console.log(`added ${newName} number ${newNumber} to phonebook`)
+      return mongoose.connection.close()
     })
     .catch((err) => console.log(err))
-    return
+  return
 }
 
 // get all
 mongoose.connect(url)
 Person
-.find({})
-.then(result => {
-    console.log("phonebook:");
+  .find({})
+  .then(result => {
+    console.log('phonebook:')
     result.forEach(person => {
-        console.log(`${person.name} ${person.number}`)
+      console.log(`${person.name} ${person.number}`)
     })
     mongoose.connection.close()
-    }
-)
+  }
+  )
